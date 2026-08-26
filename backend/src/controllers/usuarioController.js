@@ -1,11 +1,17 @@
-const express = require('express');
-const cors = require('cors');
-const app = express();
+const usuarioService = require('../services/usuarioService');
 
-app.use(cors());
-app.use(express.json());
+const buscarUsuarios = async (req, res) => {
+    try {
+        const usuarios = await usuarioService.obterTodosUsuarios();
+        res.status(200).json({ data: usuarios });
+    } catch(err) {
+        res.status(500).json({ err: 'Erro interno ao buscar usuarios' });
+    }
+};
 
-app.get('/api/mensagem', (req, res) => {
+module.exports = { buscarUsuarios }
+
+/*app.get('/api/mensagem', (req, res) => {
     res.json({ texto: "Ola do Servidor!" });
 });
 
@@ -101,6 +107,4 @@ app.get('/endereco/:uf/:cidade/:logradouro/xml/', async (req, res) => {
     } catch(err) {
         res.status(500).json({ erro: "Erro de comunicação com VIACEP" });
     }
-});
-
-app.listen(3001);
+}); */
