@@ -10,9 +10,8 @@ export const getUsuario = async (id) => {
     return response.data;
 };
 
-
-export const createUsuario = async (data) => {
-    const response = await api.post('/usuarios', data);
+export const addUsuario = async ({nome, email, senha}) => {
+    const response = await api.post('/usuarios', { nome, email, senha });
     return response.data;
 };
 

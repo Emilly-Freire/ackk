@@ -1,28 +1,30 @@
 import { useState, useEffect } from 'react';
-import { getUsuarios, getUsuario, updateUsuario, deleteUsuario } from '../../services/usuarioService';
+import { getUsuarios, getUsuario, addUsuario, updateUsuario, deleteUsuario } from '../../services/usuarioService';
 
 function Usuarios() {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [form, setForm] = useState({ nome: '', email: '', senha: '' });
 
     const [idBusca, setIdBusca] = useState('');
 
-    useEffect(() => {
-        const fetchUsuarios = async () => {
-            try {
-                const dados = await getUsuarios();
-                setUsers(dados.data || []);
-            } catch (err) {
-                console.error(err);
-                setError(err.response?.data?.err || err.message || 'Erro ao buscar usuários');
-            } finally {
-                setLoading(false);
-            }
-        };
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+        setForm((prev) => ({ ...prev, [name]: value }));
+    };
 
-        fetchUsuarios();
-    }, []);
+    const handleSalvar = async (e) => {
+        e.preventDefault();
+
+        try {
+            await addUsuario(form);
+            setForm({ nome: '', email: '', senha: '' });
+            await fetchUsuarios();
+        } catch (err) {
+            console.log(err);
+        }
+    }
 
     const handleBuscarPorId = async () => {
         const usuario = await getUsuario(idBusca);
@@ -57,6 +59,22 @@ function Usuarios() {
         }
     };
 
+    const fetchUsuarios = async () => {
+            try {
+                const dados = await getUsuarios();
+                setUsers(dados.data || []);
+            } catch (err) {
+                console.error(err);
+                setError(err.response?.data?.err || err.message || 'Erro ao buscar usuários');
+            } finally {
+                setLoading(false);
+            }
+        };
+
+    useEffect(() => {
+        fetchUsuarios();
+    }, []);
+
     return(
         <div className="page-container">
             <h1>Lista de Usuarios</h1>
@@ -89,6 +107,47 @@ function Usuarios() {
                     ))}
                 </ul>
             )}
+
+            <div className="modal-overlay">
+                <h2>Cadastrar Usuários</h2>
+
+                <form onSubmit={handleSalvar}>
+                    <label>
+                        Nome:
+                        <input
+                            type="text"
+                            name="nome"
+                            value={form.nome}
+                            onChange={handleChange}
+                            autoFocus
+                        />
+                    </label>
+
+                    <label>
+                        Email:
+                        <input
+                            type="email"
+                            name="email"
+                            value={form.email}
+                            onChange={handleChange}
+                        />
+                    </label>
+
+                    <label>
+                        Senha:
+                        <input
+                            type="password"
+                            name="senha"
+                            value={form.senha}
+                            onChange={handleChange}
+                        />
+                    </label>
+                    
+                    <div className="modal-actions">
+                        <button type="submit">Salvar</button>
+                    </div>
+                </form>
+            </div>
         </div>
     );
 }

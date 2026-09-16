@@ -20,7 +20,7 @@ module.exports = {
       },
       senha: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: false,
       },
       foto: {
         type: Sequelize.TEXT('long'),

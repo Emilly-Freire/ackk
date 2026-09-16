@@ -21,7 +21,7 @@ Usuario.init (
         },
         senha: {
             type: DataTypes.STRING,
-            allowNull: true,
+            allowNull: false,
         },
         foto: {
             type: DataTypes.TEXT('long'),

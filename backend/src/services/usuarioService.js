@@ -8,8 +8,8 @@ const obterUsuarioPorId = async (id) => {
     return await Usuario.findByPk(id);
 };
 
-const criarUsuario = async (data) => {
-    return await Usuario.create(data);
+const criarUsuario = async (nome, email, senha) => {
+    return await Usuario.create({ nome, email, senha });
 };
 
 const atualizarUsuario = async (id, data) => {

@@ -22,17 +22,23 @@ const buscarUsuario = async (req, res) => {
     }
 }
 
-const criarUsuario = async (req, res) => {
-    const { nome, email } = req.body;
+const criarUsuarios = async (req, res) => {
     try {
-        const novoUsuario = await usuarioService.criarUsuario({ nome, email });
-        res.status(201).json(novoUsuario);
+        const { nome, email, senha } = req.body;
+
+        if(!nome || !email || !senha) {
+            return res.status(400).json({ err: 'Dados inválidos' });
+        }
+
+        const usuario = await usuarioService.criarUsuario(nome, email, senha);
+        res.status(201).json(usuario);
     } catch(err) {
+        console.error(err);
         res.status(500).json({ err: 'Erro interno ao criar usuario' });
     }
 };
 
-const atualizarUsuario = async (req, res) => {
+const atualizarUsuarios = async (req, res) => {
     const { id } = req.params;
     const { nome, email } = req.body;
     try {
@@ -46,7 +52,7 @@ const atualizarUsuario = async (req, res) => {
     }
 };
 
-const deletarUsuario = async (req, res) => {
+const deletarUsuarios = async (req, res) => {
     const { id } = req.params;
     try {
         const usuarioDeletado = await usuarioService.deletarUsuario(id);
@@ -62,9 +68,9 @@ const deletarUsuario = async (req, res) => {
 module.exports = {
     buscarUsuarios,
     buscarUsuario,
-    criarUsuario,
-    atualizarUsuario,
-    deletarUsuario
+    criarUsuarios,
+    atualizarUsuarios,
+    deletarUsuarios
 };
 
 /*app.get('/api/mensagem', (req, res) => {
