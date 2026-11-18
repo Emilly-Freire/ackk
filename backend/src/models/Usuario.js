@@ -21,7 +21,12 @@ Usuario.init (
         },
         senha: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
+        },
+        google_id: {
+            type: DataTypes.STRING,
+            allowNull: true,
+            unique: true,
         },
         foto: {
             type: DataTypes.TEXT('long'),
@@ -32,7 +37,15 @@ Usuario.init (
         sequelize,
         modelName: 'Usuario',
         tableName: 'usuarios',
-        timestamps: true
+        timestamps: true,
+        defaultScope: {
+            attributes: { exclude: ['senha']}
+        },
+        scopes: {
+            comSenha: {
+                attributes: { include: ['senha']}
+            }
+        }
     }
 );
 

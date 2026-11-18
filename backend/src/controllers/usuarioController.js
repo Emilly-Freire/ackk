@@ -1,4 +1,5 @@
 const usuarioService = require('../services/usuarioService');
+const bcrypt = require('bcrypt');
 
 const buscarUsuarios = async (req, res) => {
     try {
@@ -30,7 +31,9 @@ const criarUsuarios = async (req, res) => {
             return res.status(400).json({ err: 'Dados inválidos' });
         }
 
-        const usuario = await usuarioService.criarUsuario(nome, email, senha);
+        const hash = await bcrypt.hash(senha, 10);
+
+        const usuario = await usuarioService.criarUsuario(nome, email, hash);
         res.status(201).json(usuario);
     } catch(err) {
         console.error(err);
